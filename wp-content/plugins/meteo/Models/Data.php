@@ -4,13 +4,6 @@ require_once 'Database.php';
 
 class Weather extends Database {
 
-public function addCommune($id, $code, $nom){
-    $add = $this->connect()->prepare('INSERT INTO wp_communes (id, code, nom) VALUE (:id, :code, :nom)');
-    $add->bindParam (':id', $id);
-    $add->bindParam (':code', $code);
-    $add->bindParam (':nom', $nom);
-}    
-
 private $apiKey;
 
 public function __construct(string $apiKey){

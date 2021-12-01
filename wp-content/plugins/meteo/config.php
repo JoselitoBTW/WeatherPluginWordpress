@@ -26,6 +26,7 @@ add_action('admin_menu','lienDeMenu');
      );
  }
 
+
 // Création des tables dans la base de données a l'activation du plugin
 function create_database_table(){
 
@@ -46,20 +47,22 @@ function create_database_table(){
     //Hydratation des communes
 
     $supprimer = $conn->prepare('Delete from '.$wpdb->prefix.'communes');
-     $supprimer->execute();
-     $curl = curl_init("https://geo.api.gouv.fr/communes");
-     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-     $communes = curl_exec($curl);
-     $communes = json_decode($communes, true);
-     foreach ($communes as $commune) {
-         $cp = implode(",", $commune['codesPostaux']);
-         $ajouter = $conn->prepare('INSERT INTO '.$wpdb->prefix.'communes (code, nom) VALUES (:code, :nom)');
-         $ajouter->bindParam(':code', $cp);
-         $ajouter->bindParam(':nom', $commune['nom']);
-         $ajouter->execute();
-         $ajouter->debugDumpParams();
-     }
-     curl_close($curl);
+    $supprimer->execute();
+    $curl = curl_init("https://geo.api.gouv.fr/communes");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    $communes = curl_exec($curl);
+    $communes = json_decode($communes, true);
+    foreach ($communes as $commune) {
+        $cp = implode(",", $commune['codesPostaux']);
+        $ajouter = $conn->prepare('INSERT INTO ' .$wpdb->prefix. 'communes (code, nom) VALUES (:code, :nom)');
+        $ajouter->bindParam(':code', $cp);
+        $ajouter->bindParam(':nom', $commune['nom']);
+        $ajouter->execute();
+        $ajouter->debugDumpParams();
+    }
+    curl_close($curl);
+
+
 
     // $supprimer = $conn->prepare("DELETE FROM ".$wpdb->prefix."communes");
     // $supprimer->execute();
@@ -79,9 +82,12 @@ function create_database_table(){
     //     array_push($values, $cp, $commune['nom']);
     //     }
     //     $query .= implode(",",$params);
-    //     $wpdb->query( $wpdb->prepare($query , $values));
+    //     $wpdb->query( $wpdb->prepare("$query" , $values));
 
     //     curl_close($curl);
+
+
+
 
     $page_array = array(
         'post_title' => 'Page du plugin',
